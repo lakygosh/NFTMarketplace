@@ -6,8 +6,11 @@ import Footer from "./components/Footer"
 import CreateNFT from "./components/CreateNFT"
 import Loading from "./components/Loading"
 import Alert from "./components/Alert"
+import ShowNFT from "./components/ShowNFT"
+import UpdateNFT from "./components/UpdateNFT"
 import { useEffect } from "react"
 import { getAllNFTs, isWalletConnected } from "./Blockchain.services"
+
 
 const App = () => {
 
@@ -29,6 +32,8 @@ const App = () => {
         <Transactions />
         <Footer />
         <CreateNFT />
+        <ShowNFT />
+        <UpdateNFT />
         <Loading />
         <Alert />
       </div>
