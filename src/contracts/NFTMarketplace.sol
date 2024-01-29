@@ -16,7 +16,7 @@ contract NFTMarketplace is ERC721Enumerable, Ownable {
     uint256 public royalityFee;
     uint256 public supply = 0;
     uint256 public totalTx = 0;
-    uint256 public cost = 0.0000001 ether;
+    uint256 public cost = 0.01 ether;
 
     event Sale(
         uint256 id,
@@ -122,15 +122,6 @@ contract NFTMarketplace is ERC721Enumerable, Ownable {
     }
 
     function getNFTDetails(uint256 id) external view returns (Transaction memory) {
-        /*bool exist = false;
-        for (uint256 i = 0; i < minted.length; i++){
-            if(id == minted[i].id) {
-                exist = true;
-                break;
-            }
-        }
-        require(exist , "");*/
-
         return minted[id - 1];
     }
 

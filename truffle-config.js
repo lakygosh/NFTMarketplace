@@ -21,6 +21,10 @@ module.exports = {
           });
         },
           network_id: 11155111,
+          networkCheckTimeout: 10000,
+          confirmations: 5,
+          timeoutBlocks: 200,
+          skipDryRun: true
     },
 
       goerli: {

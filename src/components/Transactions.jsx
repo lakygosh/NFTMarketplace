@@ -12,7 +12,13 @@ export const Transactions = () => {
   const [collection, setCollection] = useState([])
 
   const getCollection = () => {
-    return transactions.slice(0, end)
+    if (Array.isArray(transactions) && transactions.length > 0) {
+      const endIndex = Math.min(end, transactions.length);
+      return transactions.slice(0, end)
+    } 
+  else {
+      return [];
+  }
 }
 
 useEffect(() => {

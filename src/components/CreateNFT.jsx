@@ -1,22 +1,23 @@
 import { useState } from 'react'
 import {FaTimes} from 'react-icons/fa'
 import { setAlert, setGlobalState, setLoadingMsg, useGlobalState } from '../store'
-import { create } from 'ipfs-http-client'
+import { mintNFT } from "../Blockchain.services"
+//import { create } from 'ipfs-http-client'
 
 const imgHero = "https://www.usatoday.com/gcdn/-mm-/2f6a179195a35bd5207a5e4f64cc5fac05773f98/c=255-0-2015-1320/local/-/media/2022/07/25/USATODAY/usatsports/nft-coins-tokens-getty.jpeg.jpg"
 
-const auth = 'Basic ' + Buffer.from(
-    '5c5028c5-fb90-43aa-aeed-1392f058cc34' + ':' + 'wW0TWRpdKRgttIYL6fLDFqf0LNrZmK9m0fSlZg12FeyHAGuFyy8nah6MkJFWZYq1'
-).toString('base64')
+// const auth = 'Basic ' + Buffer.from(
+//     '5c5028c5-fb90-43aa-aeed-1392f058cc34' + ':' + 'wW0TWRpdKRgttIYL6fLDFqf0LNrZmK9m0fSlZg12FeyHAGuFyy8nah6MkJFWZYq1'
+// ).toString('base64')
 
-const client = create({
-    host: 'ipfs.infura.io',
-    port: '5001',
-    protocol: 'https',
-    headers: {
-        authorization: auth
-    }
-})
+// const client = create({
+//     host: 'ipfs.infura.io',
+//     port: '5001',
+//     protocol: 'https',
+//     headers: {
+//         authorization: auth
+//     }
+// })
 
 const CreateNFT = () => {
     const [modal] = useGlobalState('modal')
@@ -30,18 +31,23 @@ const CreateNFT = () => {
         e.preventDefault()
         if(!title || !description || !price) return
         setGlobalState('modal', 'scale-0')
-        setLoadingMsg('Uploading to IPFS...')
+        setLoadingMsg('Uploading to Sepolia...')
 
         try {
-            const created = await client.add(fileUrl)
+            // const created = await client.add(fileUrl)
+           
             setLoadingMsg('Uploaded, approve transaction now...')
-            const metadataURI = `https://ipfs.io/ipfs/${created.path}`
-            const nft = { title, description, price, metadataURI }
+
+            //const metadataURI = `https://ipfs.io/ipfs/${created.path}`
+            const metadataURI = title
+            //const metadataURI = `data:application/json;base64,${btoa(JSON.stringify(metadata))}`;
+            const nft = { title, description, metadataURI, price }
             await mintNFT(nft)
 
             closeModal()
             setAlert('Minting completed')
-            window.location.realod()
+    
+            window.location.reload()
         } catch (error) {
             console.log('Error uploading files', error)
             setAlert('Minting failed', 'red')

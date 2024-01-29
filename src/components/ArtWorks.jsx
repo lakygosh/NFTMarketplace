@@ -8,7 +8,13 @@ const ArtWorks = () => {
     const [collection, setCollection] = useState([])
 
     const getCollection = () => {
-        return nfts.slice(0, end)
+        if ( Array.isArray(nfts) && nfts.length > 0) {
+            const endIndex = Math.min(end, nfts.length);
+            return nfts.slice(0, endIndex);
+        } 
+        else {
+            return [];
+        }
     }
 
     useEffect(() => {

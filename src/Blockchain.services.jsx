@@ -6,13 +6,21 @@ const { ethereum } = window
 window.web3 = new Web3(ethereum)
 window.web3 = new Web3(window.web3.currentProvider)
 
-const getEthereumContrat = async () => {
+async function enableMetaMask() {
+    try {
+      await window.ethereum.enable();
+    } catch (error) {
+      console.error('User denied account access or MetaMask not available', error);
+    }
+}
+
+const getEthereumContract = async () => {
     const connectedAccount = getGlobalState('connectedAccount')
 
     if(connectedAccount) {
         const web3 = window.web3
         const networkId = await web3.eth.net.getId()
-        const networkData = abi.networks(networkId)
+        const networkData = abi.networks[networkId]
 
         if(networkData) {
             const contract = new web3.eth.Contract(abi.abi, networkData.address)
@@ -42,16 +50,15 @@ const isWalletConnected = async () => {
     try {
         if(!ethereum) return alert('Please install Metamask')
         const accounts = await ethereum.request({method: 'eth_requestAccounts'})
-
+        
         window.ethereum.on('chainChanged', async (chainId) => {
             window.location.reload()
         })
-
+        
         window.ethereum.on('accountsChanged', async () => {
             setGlobalState('connectedAccount', accounts[0].toLowerCase())
             await isWalletConnected()
         })
-
         if(accounts.length) {
             setGlobalState('connectedAccount', accounts[0].toLowerCase())
         }
@@ -72,13 +79,37 @@ const reportError = (error) => {
 const mintNFT = async ({title, description, metadataURI, price}) => {
     try {
         price = window.web3.utils.toWei(price.toString(), 'ether')
-        const contract = await getEthereumContrat()
+        const contract = await getEthereumContract()
         const connectedAccount = getGlobalState('connectedAccount')
         const mintPrice = window.web3.utils.toWei('0.01', 'ether')
-        
-        await contract.methods.payToMint(titl, description, metadataURI, price).send({from: connectedAccount, value: mintPrice})
+
+        await contract.methods.payToMint(title, description, metadataURI, price).send({from: connectedAccount, value: mintPrice})
 
         return true
+    } catch (error) {
+        reportError(error)
+    }
+}
+
+const updateNFT = async ({id, cost}) => {
+    try {
+        cost = window.web3.utils.toWei(cost.toString(), 'ether')
+        const contract = await getEthereumContract()
+        const connectedAccount = getGlobalState('connectedAccount')
+
+        await contract.method.changePrice(Number(id), cost).send({from: connectedAccount})
+    } catch (error) {
+        reportError(error)
+    }
+}
+
+const buyNFT = async ({id, cost}) => {
+    try {
+        cost = window.web3.utils.toWei(cost.toString(), 'ether')
+        const contract = await getEthereumContract()
+        const connectedAccount = getGlobalState('connectedAccount')
+
+        await contract.method.payToBuy(Number(id)).send({from: connectedAccount, value: cost})
     } catch (error) {
         reportError(error)
     }
@@ -88,7 +119,8 @@ const getAllNFTs = async () => {
     try {
         if(!ethereum) return alert('Please install Metamask')
 
-        const contract = await getEthereumContrat()
+        const contract = await getEthereumContract()
+
         const nfts = await contract.methods.getAllNFTs().call()
         const transactions = await contract.methods.getAllTransactions().call()
 
@@ -109,6 +141,7 @@ const structuredNFTs = (nfts) => {
         description: nft.description,
         timestamp: nft.timestamp,
     })).reverse()
+    alert(nfts[1])
 }
 
-export {connectWallet, isWalletConnected, getAllNFTs, structuredNFTs, mintNFT, getEthereumContrat}
+export {connectWallet, isWalletConnected, getAllNFTs, structuredNFTs, mintNFT, getEthereumContract as getEthereumContrat, updateNFT, buyNFT, enableMetaMask}

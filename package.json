@@ -72,7 +72,7 @@
     ]
   },
   "main": "index.js",
-  "repository": "https://github.com/Daltonic/tailwind_truffle_starter_kit.git",
+  "repository": "https://github.com/lakygosh/NFTMarketplace.git",
   "author": "lakygosh <lazar22.gosic@gmail.com>",
   "license": "MIT"
 }
