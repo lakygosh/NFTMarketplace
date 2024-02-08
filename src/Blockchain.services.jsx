@@ -24,6 +24,7 @@ const getEthereumContract = async () => {
 
         if(networkData) {
             const contract = new web3.eth.Contract(abi.abi, networkData.address)
+
             return contract
         }
         else {
@@ -83,8 +84,8 @@ const mintNFT = async ({title, description, metadataURI, price}) => {
         const connectedAccount = getGlobalState('connectedAccount')
         const mintPrice = window.web3.utils.toWei('0.01', 'ether')
 
+        alert("BS :" + metadataURI)
         await contract.methods.payToMint(title, description, metadataURI, price).send({from: connectedAccount, value: mintPrice})
-
         return true
     } catch (error) {
         reportError(error)
@@ -96,8 +97,10 @@ const updateNFT = async ({id, cost}) => {
         cost = window.web3.utils.toWei(cost.toString(), 'ether')
         const contract = await getEthereumContract()
         const connectedAccount = getGlobalState('connectedAccount')
+        alert(contract + " : " + connectedAccount)
+        //id++;
+        await contract.methods.changePrice(Number(id), cost).send({from: connectedAccount})
 
-        await contract.method.changePrice(Number(id), cost).send({from: connectedAccount})
     } catch (error) {
         reportError(error)
     }
@@ -108,8 +111,8 @@ const buyNFT = async ({id, cost}) => {
         cost = window.web3.utils.toWei(cost.toString(), 'ether')
         const contract = await getEthereumContract()
         const connectedAccount = getGlobalState('connectedAccount')
-
-        await contract.method.payToBuy(Number(id)).send({from: connectedAccount, value: cost})
+        //id++
+        await contract.methods.payToBuy(Number(id)).send({from: connectedAccount, value: cost})
     } catch (error) {
         reportError(error)
     }
@@ -126,13 +129,14 @@ const getAllNFTs = async () => {
 
         setGlobalState('nfts', structuredNFTs(nfts))
         setGlobalState('transactions', structuredNFTs(transactions))
+        alert("AL " + nfts[5].metadataURI)
     } catch (error) {
         reportError(error)
     }
 }
 
 const structuredNFTs = (nfts) => {
-    nfts.map((nft) => ({
+    return nfts.map((nft) => ({
         id: Number(nft.id),
         owner: nft.owner.toLowerCase(),
         cost: window.web3.utils.fromWei(nft.cost),
@@ -141,7 +145,6 @@ const structuredNFTs = (nfts) => {
         description: nft.description,
         timestamp: nft.timestamp,
     })).reverse()
-    alert(nfts[1])
 }
 
 export {connectWallet, isWalletConnected, getAllNFTs, structuredNFTs, mintNFT, getEthereumContract as getEthereumContrat, updateNFT, buyNFT, enableMetaMask}

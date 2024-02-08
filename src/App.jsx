@@ -8,6 +8,8 @@ import Loading from "./components/Loading"
 import Alert from "./components/Alert"
 import ShowNFT from "./components/ShowNFT"
 import UpdateNFT from "./components/UpdateNFT"
+import { setGlobalState, useGlobalState } from "./store"
+
 import Web3 from "web3";
 import { useEffect } from "react"
 import { enableMetaMask, getAllNFTs, isWalletConnected } from "./Blockchain.services"

@@ -2,22 +2,10 @@ import { useState } from 'react'
 import {FaTimes} from 'react-icons/fa'
 import { setAlert, setGlobalState, setLoadingMsg, useGlobalState } from '../store'
 import { mintNFT } from "../Blockchain.services"
-//import { create } from 'ipfs-http-client'
+import { create } from 'ipfs-http-client'
+import {uploadFileToIPFS} from "../pinata"
 
 const imgHero = "https://www.usatoday.com/gcdn/-mm-/2f6a179195a35bd5207a5e4f64cc5fac05773f98/c=255-0-2015-1320/local/-/media/2022/07/25/USATODAY/usatsports/nft-coins-tokens-getty.jpeg.jpg"
-
-// const auth = 'Basic ' + Buffer.from(
-//     '5c5028c5-fb90-43aa-aeed-1392f058cc34' + ':' + 'wW0TWRpdKRgttIYL6fLDFqf0LNrZmK9m0fSlZg12FeyHAGuFyy8nah6MkJFWZYq1'
-// ).toString('base64')
-
-// const client = create({
-//     host: 'ipfs.infura.io',
-//     port: '5001',
-//     protocol: 'https',
-//     headers: {
-//         authorization: auth
-//     }
-// })
 
 const CreateNFT = () => {
     const [modal] = useGlobalState('modal')
@@ -26,6 +14,7 @@ const CreateNFT = () => {
     const [price, setPrice] = useState('')
     const [fileUrl, setFileUrl] = useState('')
     const [imgBase64, setImgBase64] = useState(null)
+    const [file, setFile] = useState(null)
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -34,16 +23,25 @@ const CreateNFT = () => {
         setLoadingMsg('Uploading to Sepolia...')
 
         try {
-            // const created = await client.add(fileUrl)
-           
-            setLoadingMsg('Uploaded, approve transaction now...')
 
-            //const metadataURI = `https://ipfs.io/ipfs/${created.path}`
-            const metadataURI = title
-            //const metadataURI = `data:application/json;base64,${btoa(JSON.stringify(metadata))}`;
+            try {
+                const response = await uploadFileToIPFS(file)
+    
+                if(response.success === true)
+                {
+                    alert("File upload success")
+                    setFileUrl(response.pinataURL)
+                }
+            } catch (error) {
+                alert("Change image error")
+            }
+
+            setLoadingMsg('Uploaded, approve transaction now...')
+            var metadataURI = fileUrl
+            alert("CN " + metadataURI)
             const nft = { title, description, metadataURI, price }
             await mintNFT(nft)
-
+            //alert("PROSAO")
             closeModal()
             setAlert('Minting completed')
     
@@ -56,14 +54,15 @@ const CreateNFT = () => {
     }
 
     const changeImage = async (e) => {
+        var file = e.target.files[0]
         const reader = new FileReader()
-        if(e.target.files[0]) reader.readAsDataURL(e.target.files[0])
-
+        if (e.target.files[0]) reader.readAsDataURL(e.target.files[0])
+     
         reader.onload = (readerEvent) => {
-            const file = readerEvent.target.result
-            setImgBase64(file)
-            setFileUrl(e.target.files[0])
+          const file = readerEvent.target.result
+          setImgBase64(file)
         }
+        setFile(file)
     }
 
     const closeModal = () => {
@@ -102,7 +101,7 @@ const CreateNFT = () => {
                     <label className="block">
                         <span className="sr-only">Choose Profile Photo</span>
                         <input type="file" accept='image/png, image/gif, image/jpeg, image/jpg, image/webp' 
-                        className="block w-full texxt-sm text-slate-500 
+                        className="block w-full text-sm text-slate-500 
                             file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm 
                             file:font-semibold hover:file:bg-[#1d2631] focus:outline-none cursor-pointer
                             focus:ring-0"
@@ -115,7 +114,7 @@ const CreateNFT = () => {
                 <div className="flex justify-between items-center bg-gray-800 rounded-xl mt-5">
                     <input 
                         type="text" 
-                        className="block w-full texxt-sm text-slate-500 
+                        className="block w-full text-sm text-slate-500 
                             hover:file:bg-[#1d2631] focus:outline-none cursor-pointer
                             focus:ring-0 bg-transparent border-0"
                         placeholder='Title'
@@ -129,7 +128,7 @@ const CreateNFT = () => {
                 <div className="flex justify-between items-center bg-gray-800 rounded-xl mt-5">
                     <input 
                         type="number" 
-                        className="block w-full texxt-sm text-slate-500 
+                        className="block w-full text-sm text-slate-500 
                             hover:file:bg-[#1d2631] focus:outline-none cursor-pointer
                             focus:ring-0 bg-transparent border-0"
                         placeholder='Price (ETH)'
@@ -145,7 +144,7 @@ const CreateNFT = () => {
                 <div className="flex justify-between items-center bg-gray-800 rounded-xl mt-5">
                     <textarea 
                         type="text" 
-                        className="block w-full texxt-sm text-slate-500 
+                        className="block w-full text-sm text-slate-500 
                             hover:file:bg-[#1d2631] focus:outline-none cursor-pointer
                             focus:ring-0 bg-transparent border-0 h-20 resize-none"
                         placeholder='Description'

@@ -1,18 +1,17 @@
 import {BiTransfer} from 'react-icons/bi'
 import {MdOpenInNew} from 'react-icons/md'
-import { useGlobalState, truncate } from '../store'
+import { useGlobalState, setGlobalState,truncate } from '../store'
 import { useEffect, useState } from 'react'
 
 
 export const Transactions = () => {
-
   const [transactions] = useGlobalState('transactions')
   const [end, setEnd] = useState(3)
   const [count] = useState(3)
   const [collection, setCollection] = useState([])
 
   const getCollection = () => {
-    if (Array.isArray(transactions) && transactions.length > 0) {
+    if (transactions.length > 0) {
       const endIndex = Math.min(end, transactions.length);
       return transactions.slice(0, end)
     } 
@@ -22,7 +21,9 @@ export const Transactions = () => {
 }
 
 useEffect(() => {
+  if (transactions) {
     setCollection(getCollection())
+  }
 }, [transactions, end])
 
   return (
@@ -34,8 +35,8 @@ useEffect(() => {
         </h4>
 
         <div className="grid grid-cols-1 md: grid-cols-3 lg: grid-cols-4 gap-6 md:gaps-4 lg: gaps-2 py-2.5">
-                {collection.map((nft, i) => (
-                    <Transaction key={i} tx={i + 1}/>
+                {collection.map((tx, i) => (
+                    <Transaction key={i} tx={tx}/>
                   ))}
         </div>
 

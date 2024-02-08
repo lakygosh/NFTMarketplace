@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { setGlobalState, useGlobalState } from "../store"
 
+
 const ArtWorks = () => {
     const [nfts] = useGlobalState('nfts')
     const [end, setEnd] = useState(4)
@@ -8,7 +9,8 @@ const ArtWorks = () => {
     const [collection, setCollection] = useState([])
 
     const getCollection = () => {
-        if ( Array.isArray(nfts) && nfts.length > 0) {
+        if (nfts.length > 0) {
+
             const endIndex = Math.min(end, nfts.length);
             return nfts.slice(0, endIndex);
         } 
@@ -18,7 +20,9 @@ const ArtWorks = () => {
     }
 
     useEffect(() => {
-        setCollection(getCollection())
+        if (nfts) {
+            setCollection(getCollection());
+        }    
     }, [nfts, end])
 
   return (
@@ -34,7 +38,7 @@ const ArtWorks = () => {
                     <Card key={i} nft = {nft} />
                 ))}
             </div>
-            {collection.length > 0 && nft.length > collection.length ? (
+            {collection.length > 0 && nfts.length > collection.length ? (
                 <div className="text-center my-5">
                     <button className="shadow-lg shadow-black text-white  
                         bg-[#e32970] hover:bg-[#bd255f] rounded-full px-1.5 py-1"
@@ -49,8 +53,10 @@ const ArtWorks = () => {
     </div>
   )
 }
-
+//https://red-top-seahorse-583.mypinata.cloud/ipfs/QmRwZjoVDBuktJSa1SSMG3Sf9G1CrihY1KULjSDFsEFLjv
 const Card = ({nft}) => {
+    //alert(nft.metadataURI)
+
     const setNFT = () => {
         setGlobalState('nft', nft)
         setGlobalState('showModal', 'scale-100')
@@ -58,7 +64,8 @@ const Card = ({nft}) => {
     return(
         <div className="w-full shadow-xl shadow-black rounded-md overflow-hidden bg-gray-800 my-2 p-3">
             <img className="h-60 w-full object-cover shadow-lg shadow-black rounded-lg mb-3" 
-                src={nft.metadataURI} 
+                src={nft.metadataURI}
+                //src=' https://gateway.pinata.cloud/ipfs/QmQ7oA2X4RDhtBw1ac6s9adj1SLv3eYtb8iBEWE5JvvL1g'
                 alt={nft.title} 
             />
             <h4 className="text-white font-semibold">{nft.title}</h4>
