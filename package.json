@@ -13,7 +13,9 @@
     "deploy:goerli": "truffle migrate --reset --network goerli",
     "deploy:sepolia": "truffle migrate --reset --network sepolia",
     "deploy:mumbai": "truffle migrate --network mumbai",
-    "deploy:linea": "truffle migrate --network linea"
+    "deploy:linea": "truffle migrate --network linea",
+    "buildreact": "esbuild src/App.jsx --bundle --outfile=Bundle.js --loader:.js=jsx --format=cjs"
+
   },
   "dependencies": {
     "axios": "^1.6.7",
