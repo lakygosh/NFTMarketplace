@@ -1,15 +1,15 @@
 import { useState } from 'react'
 import {FaTimes} from 'react-icons/fa'
 import { setAlert, setGlobalState, setLoadingMsg, useGlobalState } from '../store'
-import { mintNFT } from "../Blockchain.services"
+import { createCollection } from "../Blockchain.services"
 import { create } from 'ipfs-http-client'
 import {uploadFileToIPFS} from "../pinata"
 
 const imgHero = "https://www.usatoday.com/gcdn/-mm-/2f6a179195a35bd5207a5e4f64cc5fac05773f98/c=255-0-2015-1320/local/-/media/2022/07/25/USATODAY/usatsports/nft-coins-tokens-getty.jpeg.jpg"
 
-const CreateNFT = () => {
-    const [modal] = useGlobalState('modal')
-    const [title, setTitle] = useState('')
+const CreateCollection = () => {
+    const [modal] = useGlobalState('CreateCollectionModal')
+    const [name, setName] = useState('')
     const [description, setDescription] = useState('')
     const [fileUrl, setFileUrl] = useState('')
     const [imgBase64, setImgBase64] = useState(null)
@@ -17,8 +17,8 @@ const CreateNFT = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        if(!title || !description) return
-        setGlobalState('modal', 'scale-0')
+        if(!name || !description) return
+        setGlobalState('CreateCollectionModal', 'scale-0')
         setLoadingMsg('Uploading to Sepolia...')
 
         try {
@@ -36,15 +36,19 @@ const CreateNFT = () => {
 
             setLoadingMsg('Uploaded, approve transaction now...')
             var metadataURI = fileUrl
-            const nft = { title, description, metadataURI }
-            await mintNFT(nft)
+
+            const collection = { name, description, metadataURI }
+
+            await createCollection(collection)
+            alert("PROSAO")
+
             closeModal()
-            setAlert('Minting completed')
+            setAlert('Creating collection completed')
     
             window.location.reload()
         } catch (error) {
             console.log('Error uploading files', error)
-            setAlert('Minting failed', 'red')
+            setAlert('Creating collection failed', 'red')
         }
 
     }
@@ -62,14 +66,14 @@ const CreateNFT = () => {
     }
 
     const closeModal = () => {
-        setGlobalState('modal', 'scale-0')
+        setGlobalState('CreateCollectionModal', 'scale-0')
         resetForm()
     }
 
     const resetForm = () => {
         setFileUrl('')
         setImgBase64(null)
-        setTitle('')
+        setName('')
         setDescription('')
     }
   return (
@@ -80,7 +84,7 @@ const CreateNFT = () => {
         <div className="bg-[#151c25] shadow-xl shadow-[#297ae3] rounded-xl w-11/12 md:w-2/5 h-7/12 p-6">
             <form onSubmit={handleSubmit} className="flex flex-col">
                 <div className="flex justify-between items-center text-gray-400">
-                    <p className="font-semibold">Add NFT</p>
+                    <p className="font-semibold">Create Collection</p>
                     <button onClick={closeModal} type="button" className="border-0 bg-transparent focus:outline-none">
                         <FaTimes />
                     </button>
@@ -112,10 +116,10 @@ const CreateNFT = () => {
                         className="block w-full text-sm text-slate-500 
                             hover:file:bg-[#1d2631] focus:outline-none cursor-pointer
                             focus:ring-0 bg-transparent border-0"
-                        placeholder='Title'
-                        name='title'
-                        onChange={(e) => setTitle(e.target.value)}
-                        value={title}
+                        placeholder='Name'
+                        name='name'
+                        onChange={(e) => setName(e.target.value)}
+                        value={name}
                         required
                     />
                 </div>
@@ -139,7 +143,7 @@ const CreateNFT = () => {
                     type='submit'
                     onClick={handleSubmit}
                 >
-                    Mint now
+                    Kreiraj kolekciju
                 </button>
 
             </form>
@@ -148,4 +152,4 @@ const CreateNFT = () => {
   )
 }
 
-export default CreateNFT
+export default CreateCollection

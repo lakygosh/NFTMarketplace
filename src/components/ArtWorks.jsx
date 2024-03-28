@@ -12,7 +12,7 @@ const ArtWorks = () => {
         if (nfts.length > 0) {
 
             const endIndex = Math.min(end, nfts.length);
-            return nfts.slice(0, endIndex);
+            return nfts.slice(0, endIndex-7);
         } 
         else {
             return [];
@@ -30,7 +30,7 @@ const ArtWorks = () => {
         <div className="w-4/5 py-10 mx-auto">
 
             <h4 className="text-white text-3xl font-bold uppercase text-gradient">
-                {collection.length > 0 ? 'Latest Artwork' : 'No Artworks Yet'}
+                {collection.length > 0 ? 'Latest NFTs' : 'No NFTs Yet'}
             </h4>
 
             <div className="grid grid-cols-1 md: grid-cols-3 lg: grid-cols-4 gap-6 md:gaps-4 lg: gaps-3 py-2.5">
@@ -74,8 +74,8 @@ const Card = ({nft}) => {
 
             <div className="flex justify-between items-center mt-3 text-white">
                 <div className="flex flex-col ">
-                    <small className="text-xs">Current Price</small>
-                    <p className="text-sm font-semibold">{nft.cost}</p>
+                    <small className="text-xs">Year</small>
+                    <p className="text-sm font-semibold">2024</p>
                 </div>
 
                 <button className="shadow-lg shadow-black text-sm  

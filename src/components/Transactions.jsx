@@ -57,13 +57,13 @@ useEffect(() => {
   )
 }
 const Transaction = ({tx}) => (
-  <div className="flex justify-between items-center border 
+  <div className="flex justify-start items-center border 
     border-blue-500 text-gray-400 w-full shadow-xl shadow-black rounded-md overflow-hidden bg-gray-800 my-2 p-3">
     <div className="rounded-md shadow-sm shadow-blue-500 p-2">
       <BiTransfer/>
     </div>
 
-    <div>
+    <div className="ml-4">
       <h4 className="text-sm">NFT Transfered</h4>
       <small className="flex justify-start items-center">
         <span className="mr-1">Received by</span>
@@ -72,7 +72,7 @@ const Transaction = ({tx}) => (
       </small>
     </div>
 
-    <p className="text-sm font-medium">{tx.cost} ETH</p>
+    {/* <p className="text-sm font-medium">{tx.cost} ETH</p> */}
   </div>
 )
 

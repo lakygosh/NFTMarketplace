@@ -17,7 +17,7 @@ const UpdateNFT = () => {
         try {
         setLoadingMsg('Price updating...')
         setGlobalState('updateModal', 'scale-0')
-        await updateNFT({id: nft?.id, cost: price})
+       // await updateNFT({id: nft?.id, cost: price})
 
         setAlert('Price updated!')
         window.location.reload()

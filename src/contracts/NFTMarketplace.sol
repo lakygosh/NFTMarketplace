@@ -12,13 +12,10 @@ contract NFTMarketplace is ERC721Enumerable, Ownable {
     mapping(string => uint8) existingURIs;
     mapping(uint256 => address) public holderOf;
 
-    mapping(string => address) private collectionOwners;
-
 
     address public artist;
     uint256 public royalityFee;
     uint256 public supply = 0;
-    uint256 public collectionCounter = 0;
     uint256 public totalTx = 0;
     uint256 public cost = 0.01 ether;
 
@@ -27,8 +24,7 @@ contract NFTMarketplace is ERC721Enumerable, Ownable {
         address indexed owner,
         uint256 cost,
         string metadataURI,
-        uint256 timestamp,
-        Collection collection
+        uint256 timestamp
     );
 
     struct Transaction {
@@ -38,21 +34,12 @@ contract NFTMarketplace is ERC721Enumerable, Ownable {
         string title;
         string description;
         string metadataURI;
-        uint256 timestamp;
-        Collection collection;
-    }
-
-    struct Collection {
-        uint256 id;
-        string name;
-        string description;
-        address owner;
+        uint256 timestamp;    
+        
     }
 
     Transaction[] transactions;
     Transaction[] minted;
-
-    Collection[] createdCollections;
 
     constructor (
         string memory _name,
@@ -64,23 +51,7 @@ contract NFTMarketplace is ERC721Enumerable, Ownable {
         artist = _artist;
     }
 
-    function createCollection(string memory collectionName, string memory description) external {
-        require(collectionOwners[collectionName] == address(0), "Collection already exists");
-        collectionOwners[collectionName] = msg.sender;
-
-        collectionCounter++;
-
-        createdCollections.push(
-            Collection(
-                collectionCounter,
-                collectionName,
-                description,
-                msg.sender
-            )
-        );
-    }
-
-    function payToMint(string memory title, string memory description, string memory metadataURI, uint256 salesPrice, string memory collectionName) external payable {
+    function payToMint(string memory title, string memory description, string memory metadataURI, uint256 salesPrice) external payable {
         require(msg.value >= cost, "Ether too low for minting!");
         require(existingURIs[metadataURI] == 0, "This NFT is already minted!");
         require(msg.sender != owner(), "Sales not allowed!");
@@ -90,7 +61,6 @@ contract NFTMarketplace is ERC721Enumerable, Ownable {
         payTo(owner(), (msg.value - royality));
 
         supply++;
-        Collection memory collection = getCollection(collectionName);
 
         minted.push(
             Transaction(
@@ -100,31 +70,18 @@ contract NFTMarketplace is ERC721Enumerable, Ownable {
                 title,
                 description,
                 metadataURI,
-                block.timestamp,
-                collection
+                block.timestamp
             )      
         );
 
-        emit Sale(supply, msg.sender, msg.value, metadataURI, block.timestamp, collection);
+        emit Sale(supply, msg.sender, msg.value, metadataURI, block.timestamp);
 
         _safeMint(msg.sender, supply);
         existingURIs[metadataURI] = 1;
         holderOf[supply] = msg.sender;
     }
 
-    function getCollection(string memory collectionName) internal view returns(Collection memory)
-    {
-        for(uint256 i = 0; i < createdCollections.length; i++)
-        {
-            if(keccak256(bytes(collectionName)) == keccak256(bytes(createdCollections[i].name)) )
-            {
-                return createdCollections[i];
-            }
-        }
-        return Collection(0, "", "", msg.sender);
-    }
-
-    function payToBuy(uint256 id, string memory collectionName) external payable {
+    function payToBuy(uint256 id) external payable {
         require(msg.value >= minted[id - 1].cost, "Ether too low for purchase");
         require(msg.sender != minted[id - 1].owner, "Operation NOT Allowed!");
 
@@ -133,7 +90,6 @@ contract NFTMarketplace is ERC721Enumerable, Ownable {
         payTo(minted[id - 1].owner, (msg.value - royality));
 
         totalTx++;
-        Collection memory collection = getCollection(collectionName);
         
         transactions.push(
             Transaction({
@@ -143,12 +99,11 @@ contract NFTMarketplace is ERC721Enumerable, Ownable {
                 title: minted[id - 1].title,
                 description: minted[id - 1].description,
                 metadataURI: minted[id - 1].metadataURI,
-                timestamp: block.timestamp,
-                collection: collection
+                timestamp: block.timestamp
             })
         );
 
-        emit Sale(totalTx, msg.sender, msg.value, minted[id - 1].metadataURI, block.timestamp, collection);
+        emit Sale(totalTx, msg.sender, msg.value, minted[id - 1].metadataURI, block.timestamp);
     }
 
     function changePrice(uint256 id, uint256 newPrice) external returns (bool){
@@ -175,16 +130,4 @@ contract NFTMarketplace is ERC721Enumerable, Ownable {
     function getAllTransactions() external view returns (Transaction[] memory) {
         return transactions;
     }
-
-    function getCollectionDetails(uint256 id) external view returns (Collection memory) {
-        return createdCollections[id - 1];
-    }
-
-    function getAllCollectinos() external view returns (Collection[] memory) {
-        return createdCollections;
-    }
-
-  
-
-    
 }

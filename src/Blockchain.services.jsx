@@ -77,46 +77,42 @@ const reportError = (error) => {
     throw new Error('No Ethereum Object.')
 }
 
-const mintNFT = async ({title, description, metadataURI, price}) => {
+const mintNFT = async ({title, description, metadataURI}) => {
     try {
-        price = window.web3.utils.toWei(price.toString(), 'ether')
         const contract = await getEthereumContract()
         const connectedAccount = getGlobalState('connectedAccount')
         const mintPrice = window.web3.utils.toWei('0.01', 'ether')
 
-        alert("BS :" + metadataURI)
-        await contract.methods.payToMint(title, description, metadataURI, price).send({from: connectedAccount, value: mintPrice})
+        await contract.methods.payToMint(title, description, metadataURI, 0).send({from: connectedAccount, value: mintPrice})
         return true
     } catch (error) {
         reportError(error)
     }
 }
+// const createCollection = async ({name, description, metadataURI}) => {
+//     try {
+//         const contract = await getEthereumContract()
+//         const connectedAccount = getGlobalState('connectedAccount')
+//         await contract.methods.createCollection(name, description, metadataURI).send({from: connectedAccount})
+//         alert("PRosaO")
 
-const updateNFT = async ({id, cost}) => {
-    try {
-        cost = window.web3.utils.toWei(cost.toString(), 'ether')
-        const contract = await getEthereumContract()
-        const connectedAccount = getGlobalState('connectedAccount')
-        alert(contract + " : " + connectedAccount)
-        //id++;
-        await contract.methods.changePrice(Number(id), cost).send({from: connectedAccount})
+//         return true
+//     } catch (error) {
+//         reportError(error)
+//     }
+// }
 
-    } catch (error) {
-        reportError(error)
-    }
-}
-
-const buyNFT = async ({id, cost}) => {
-    try {
-        cost = window.web3.utils.toWei(cost.toString(), 'ether')
-        const contract = await getEthereumContract()
-        const connectedAccount = getGlobalState('connectedAccount')
-        //id++
-        await contract.methods.payToBuy(Number(id)).send({from: connectedAccount, value: cost})
-    } catch (error) {
-        reportError(error)
-    }
-}
+// const buyNFT = async ({id, cost}) => {
+//     try {
+//         cost = window.web3.utils.toWei(cost.toString(), 'ether')
+//         const contract = await getEthereumContract()
+//         const connectedAccount = getGlobalState('connectedAccount')
+//         //id++
+//         await contract.methods.payToBuy(Number(id)).send({from: connectedAccount, value: cost})
+//     } catch (error) {
+//         reportError(error)
+//     }
+// }
 
 const getAllNFTs = async () => {
     try {
@@ -129,17 +125,28 @@ const getAllNFTs = async () => {
 
         setGlobalState('nfts', structuredNFTs(nfts))
         setGlobalState('transactions', structuredNFTs(transactions))
-        alert("AL " + nfts[5].metadataURI)
     } catch (error) {
         reportError(error)
     }
 }
 
+// const getAllCollections = async () => {
+//     try {
+//         if(!ethereum) return alert('Please install Metamask')
+
+//         const contract = await getEthereumContract()
+//         const collections = await contract.methods.getAllCollections().call()
+//         setGlobalState('collections', structuredCollection(collections))
+
+//     } catch (error) {
+//         reportError(error)
+//     }
+// }
+
 const structuredNFTs = (nfts) => {
     return nfts.map((nft) => ({
         id: Number(nft.id),
         owner: nft.owner.toLowerCase(),
-        cost: window.web3.utils.fromWei(nft.cost),
         title: nft.title,
         metadataURI: nft.metadataURI,
         description: nft.description,
@@ -147,4 +154,14 @@ const structuredNFTs = (nfts) => {
     })).reverse()
 }
 
-export {connectWallet, isWalletConnected, getAllNFTs, structuredNFTs, mintNFT, getEthereumContract as getEthereumContrat, updateNFT, buyNFT, enableMetaMask}
+// const structuredCollections = (collections) => {
+//     return collections.map((collection) => ({
+//         id: Number(collection.id),
+//         name: collection.name,
+//         metadataURI: nfcollectiont.metadataURI,
+//         description: collection.description,
+//         owner: collection.owner.toLowerCase(),
+//     })).reverse()
+// }
+
+export {connectWallet, isWalletConnected, getAllNFTs, structuredNFTs, mintNFT, getEthereumContract as getEthereumContrat, enableMetaMask}

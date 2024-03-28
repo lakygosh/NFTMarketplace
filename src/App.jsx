@@ -8,11 +8,17 @@ import Loading from "./components/Loading"
 import Alert from "./components/Alert"
 import ShowNFT from "./components/ShowNFT"
 import UpdateNFT from "./components/UpdateNFT"
+import Collections from "./components/Collections"
+
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+
 import { setGlobalState, useGlobalState } from "./store"
 
 import Web3 from "web3";
 import { useEffect } from "react"
-import { enableMetaMask, getAllNFTs, isWalletConnected } from "./Blockchain.services"
+import { enableMetaMask, getAllCollections, getAllNFTs, isWalletConnected } from "./Blockchain.services"
+import ShowProfile from "./components/ShowProfile"
 
 
 const App = () => {
@@ -27,7 +33,7 @@ const App = () => {
           // Now you can call your Ethereum-related functions
           await isWalletConnected()
           await getAllNFTs()
-          
+
         } catch (error) {
           console.error('User denied account access or MetaMask not available', error);
         }
@@ -45,6 +51,7 @@ const App = () => {
   }, [])
 
   return (
+    
     <div className="min-h-screen">
 
       <div className="gradient-bg-hero">
@@ -53,12 +60,16 @@ const App = () => {
       </div>
 
       <div>
+        <Routes>
+          <Route path="/collectinos" element={<Collections/>}/>
+        </Routes>
+
         <ArtWorks />
         <Transactions />
         <Footer />
         <CreateNFT />
         <ShowNFT />
-        <UpdateNFT />
+        <ShowProfile />
         <Loading />
         <Alert />
       </div>
