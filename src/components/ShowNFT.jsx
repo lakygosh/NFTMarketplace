@@ -62,13 +62,13 @@ const ShowNFT = () => {
                 {connectedAccount == nft?.owner ? (
                         
                         <button className="flex justify-center items-center shadow-lg shadow-black text-white p-2 mt-5 w-full
-                            bg-[#2898a0] hover:bg-[#287fa0] rounded-full"
+                        bg-[#7330aa] hover:bg-[#8828a0] rounded-full"
                         >
                             Send request
                         </button>
                     ) : (
                         <button className="flex justify-center items-center shadow-lg shadow-black text-white p-2 mt-5 w-full
-                            bg-[#2898a0] hover:bg-[#287fa0] rounded-full"
+                        bg-[#7330aa] hover:bg-[#8828a0] rounded-full"
                         >
                             Send request
                         </button>

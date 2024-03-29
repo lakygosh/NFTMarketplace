@@ -41,7 +41,7 @@ const ArtWorks = () => {
             {collection.length > 0 && nfts.length > collection.length ? (
                 <div className="text-center my-5">
                     <button className="shadow-lg shadow-black text-white  
-                        bg-[#e32970] hover:bg-[#bd255f] rounded-full px-1.5 py-1"
+                        bg-[#5927b6] hover:bg-[#7925bd] rounded-full px-1.5 py-1"
                         onClick={() => setEnd(end + count)}
                     >
                         Load More
@@ -79,10 +79,10 @@ const Card = ({nft}) => {
                 </div>
 
                 <button className="shadow-lg shadow-black text-sm  
-                    bg-[#2898a0] hover:bg-[#287fa0] rounded-full px-1.5 py-1"
+                    bg-[#7330aa] hover:bg-[#8828a0] rounded-full px-1.5 py-1"
                     onClick={setNFT}
                 >
-                    View Deteils
+                    View Details
                 </button>
             </div>
         </div>

@@ -24,7 +24,7 @@ const Hero = () => {
 
             <div className="flex mt-6">
               <button onClick={() => setGlobalState('modal', 'scale-100')} className="shadow-xl shadow-black text-white
-               bg-[#2898a0] hover:bg-[#287fa0] rounded-full p-2">
+               bg-[#7330aa] hover:bg-[#8828a0] rounded-full p-2">
                 Create NFT
               </button>
 
@@ -71,7 +71,7 @@ const Hero = () => {
         </div>
 
         <button onClick={() => setGlobalState('profileModal', 'scale-100')} className="ml-3 mb-3 shadow-xl shadow-black text-white
-          bg-[#2898a0] hover:bg-[#287fa0] rounded-full p-2">
+          bg-[#7330aa] hover:bg-[#8828a0] rounded-full p-2">
           Profile details
         </button>
 
