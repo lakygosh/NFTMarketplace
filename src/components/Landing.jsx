@@ -3,7 +3,7 @@ import { setGlobalState, truncate, useGlobalState } from '../store'
 const Web3 = require('web3');
 
 const imgLanding = "https://red-top-seahorse-583.mypinata.cloud/ipfs/QmNmDjzMzWFPH6MAD3rRXcxy7CRHWtZqiHvNtKyNG3Y9vS"
-//const web3 = new Web3(new Web3.provider.HttpProvider('https://sepolia.infura.io/v3/e5dae1df891e488788b9681994b7f6fa'));
+//const web3 = new Web3(new Web3.provider.HttpProvider('https://sepolia.infura.io/v3/<INFURA_PROJECT_ID>'));
 const Hero = () => {
 
   const [connectedAccount] = useGlobalState('connectedAccount')
