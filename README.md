@@ -22,6 +22,8 @@ A decentralized app where students mint their academic achievements as ERC-721 N
 
 Achievables reworks a general-purpose NFT marketplace into a portfolio platform for students. The idea: each passed course or earned skill becomes an NFT "badge" (for example, the bundled `Programiranje 1` badge from FON, University of Belgrade), owned by the student's wallet and visible to recruiters and companies.
 
+**The problem.** Almost every graduate has a degree, so it doesn't set anyone apart, and HR can't tell real skills from the generic lines everyone writes on a CV. Achievables issues verified badges for skills you can't show with a diploma: student organizations, courses and self-learning. Before building, I interviewed HR professionals, then designed the architecture and user flows and built this proof of concept (Dec 2023 – Feb 2024). We presented it at FON and at the Mathematical Institute of the Serbian Academy of Sciences and Arts. It stayed a proof of concept and was not launched.
+
 The project grew out of my earlier course project, [ITEH-NFTMarketplace](https://github.com/lakygosh/ITEH-NFTMarketplace). Both repos share the same smart contract and Sepolia deployment; this one changes the product direction.
 
 | | ITEH-NFTMarketplace | NFTMarketplace (this repo) |
